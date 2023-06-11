@@ -45,8 +45,17 @@ app.post('/messages', async (req, res) => {
     const messagess = await Message.find({ userid: UserExists._id }).sort({
       timestamp: 1,
     })
+    // console.log(
+    //   'UserExists._id',
+    //   UserExists._id,
+    //   UserExists._id === '6479b5fcc6af512d1d09e2d6' ? true : false
+    // )
 
-    io.emit('message', messagess)
+    // io.emit('message', messagess)
+    io.to(UserExists._id).emit('message', messagess)
+
+    // io.to(String(UserExists._id)).emit('message', messagess)
+
     return res.status(201).json({
       success: true,
       message: 'Message Sent Successfully',
@@ -73,7 +82,8 @@ io.on('connection', (socket) => {
       timestamp: 1,
     })
 
-    socket.emit('message', messages)
+    // socket.emit('message', messages)
+    io.to(userId).emit('message', messages)
   })
   // socket.on('message', async (message) => {
   //   console.log('joineeed')
